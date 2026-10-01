@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - PocketSmart AI</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body class="center-body">
+    <div class="auth-card">
+        <div class="logo-circle small">💰</div>
+        <h2>Create Account</h2>
+        <p class="auth-sub">Join PocketSmart AI today</p>
+
+        <form action="/register" method="post" class="auth-form">
+            <div class="input-group">
+                <label>Choose Username</label>
+                <input type="text" name="username" placeholder="Enter username" required>
+            </div>
+            
+            <div class="input-group">
+                <label>Create Password</label>
+                <input type="password" name="password" placeholder="Min 6 characters" required>
+            </div>
+
+            <div class="input-group">
+                <label>Email (Optional)</label>
+                <input type="email" name="email" placeholder="your@email.com">
+            </div>
+
+            <button type="submit" class="btn-full">Create Account</button>
+        </form>
+
+        <div class="auth-footer">
+            <p>Already have an account? <a href="/login">Login here</a></p>
+            <a href="/" class="back-link">← Back to Home</a>
+        </div>
+    </div>
+</body>
+</html>

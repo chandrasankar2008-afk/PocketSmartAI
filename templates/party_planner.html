@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Party Planner - PocketSmart AI</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body>
+    <div class="navbar party-nav">
+        <h2>🎉 Party Planner</h2>
+        <a href="/dashboard">← Dashboard</a>
+    </div>
+
+    <div class="container">
+        <div class="header-flex">
+            <h1>Party & Celebrations</h1>
+            <span class="count-badge party-badge">{{ items|length }} Plans</span>
+        </div>
+
+        <div class="progress-card party-tip">
+            <p>🎈 AI Tip: Plan 30% advance for decoration, 40% food</p>
+        </div>
+
+        <div class="form-box">
+            <h3>➕ Add Party Item</h3>
+            <form action="/add/party" method="post">
+                <input type="text" name="title" placeholder="Ex: Birthday Cake, DJ, Decorations" required>
+                <input type="number" name="amount" placeholder="Budget Rs." required>
+                <button type="submit" class="btn-party">Add Party Plan</button>
+            </form>
+        </div>
+
+        <div class="grid-list">
+            {% for i in items %}
+            <div class="item-card party-card">
+                <div class="item-left">
+                    <div class="icon-circle party-icon">🎉</div>
+                    <div>
+                        <h4>{{ i.title }}</h4>
+                        <p>Rs. {{ i.amount }}</p>
+                    </div>
+                </div>
+                <a href="/delete/party/{{ loop.index0 }}" class="del">×</a>
+            </div>
+            {% endfor %}
+
+            {% if items|length == 0 %}
+            <div class="empty-card">
+                <h2>🎂</h2>
+                <p>No party plans yet. Let's plan a celebration!</p>
+            </div>
+            {% endif %}
+        </div>
+
+        {% if items|length > 0 %}
+        <div class="total-footer party-footer">
+            <span>Total Party Budget</span>
+            <strong>Rs. {{ items|sum(attribute='amount') }}</strong>
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>

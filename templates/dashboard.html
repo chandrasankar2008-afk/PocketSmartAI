@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - PocketSmart AI</title>
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+    <div class="navbar">
+        <h2>💰 PocketSmart AI</h2>
+        <a href="/logout">Logout</a>
+    </div>
+
+    <div class="container">
+        <h1>Hello, {{ user }} 👋</h1>
+        
+        <div class="total-box">
+            <h3>Total Spent</h3>
+            <h1>Rs. {{ total }}</h1>
+        </div>
+
+        <div class="grid">
+            <a href="/home_planner" class="card home">
+                <h2>🏠</h2>
+                <p>Home Planner</p>
+                <span>{{ planners.home|length }} Items</span>
+            </a>
+            <a href="/jewelry_planner" class="card gold">
+                <h2>💍</h2>
+                <p>Jewelry Planner</p>
+                <span>{{ planners.jewelry|length }} Goals</span>
+            </a>
+            <a href="/party_planner" class="card party">
+                <h2>🎉</h2>
+                <p>Party Planner</p>
+                <span>{{ planners.party|length }} Items</span>
+            </a>
+            <a href="/history" class="card history">
+                <h2>📜</h2>
+                <p>History</p>
+                <span>View All</span>
+            </a>
+        </div>
+
+        <div class="form-box">
+            <h3>➕ Add Daily Expense</h3>
+            <form action="/add" method="post">
+                <input type="text" name="title" placeholder="Ex: Tea, Bus, Lunch" required>
+                <input type="number" name="amount" placeholder="Amount (Rs.)" required>
+                <button type="submit">Add Expense</button>
+            </form>
+        </div>
+
+        <h3>Recent Expenses</h3>
+        <div class="list">
+            {% for e in expenses %}
+            <div class="list-item">
+                <span>{{ e.title }} <small>[{{ e.category }}]</small></span>
+                <strong>Rs. {{ e.amount }}</strong>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+</html>

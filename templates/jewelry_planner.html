@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jewelry Planner - PocketSmart AI</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body>
+    <div class="navbar gold-nav">
+        <h2>💍 Jewelry Planner</h2>
+        <a href="/dashboard">← Dashboard</a>
+    </div>
+
+    <div class="container">
+        <div class="header-flex">
+            <h1>Gold & Jewelry Goals</h1>
+            <span class="count-badge gold-badge">{{ items|length }} Goals</span>
+        </div>
+
+        <div class="progress-card">
+            <p>💡 AI Tip: Save small daily, buy gold monthly</p>
+        </div>
+
+        <div class="form-box">
+            <h3>➕ Add Jewelry Item</h3>
+            <form action="/add/jewelry" method="post">
+                <input type="text" name="title" placeholder="Ex: Gold Chain 10g, Diamond Ring" required>
+                <input type="number" name="amount" placeholder="Target Amount Rs." required>
+                <button type="submit" class="btn-gold">Save Goal</button>
+            </form>
+        </div>
+
+        <div class="grid-list">
+            {% for i in items %}
+            <div class="item-card gold-card">
+                <div class="item-left">
+                    <div class="icon-circle gold-icon">💍</div>
+                    <div>
+                        <h4>{{ i.title }}</h4>
+                        <p>Rs. {{ i.amount }}</p>
+                    </div>
+                </div>
+                <a href="/delete/jewelry/{{ loop.index0 }}" class="del">×</a>
+            </div>
+            {% endfor %}
+
+            {% if items|length == 0 %}
+            <div class="empty-card">
+                <h2>✨</h2>
+                <p>No jewelry goals yet. Start saving for your dream!</p>
+            </div>
+            {% endif %}
+        </div>
+
+        {% if items|length > 0 %}
+        <div class="total-footer gold-footer">
+            <span>Total Jewelry Target</span>
+            <strong>Rs. {{ items|sum(attribute='amount') }}</strong>
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>

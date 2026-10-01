@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home Planner - PocketSmart AI</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body>
+    <div class="navbar">
+        <h2>🏠 Home Planner</h2>
+        <a href="/dashboard">← Dashboard</a>
+    </div>
+
+    <div class="container">
+        <div class="header-flex">
+            <h1>Home Essentials</h1>
+            <span class="count-badge">{{ items|length }} Items Planned</span>
+        </div>
+
+        <!-- Add Form -->
+        <div class="form-box">
+            <h3>➕ Add Home Item</h3>
+            <form action="/add/home" method="post">
+                <input type="text" name="title" placeholder="Ex: Fridge, TV, Sofa, Rent" required>
+                <input type="number" name="amount" placeholder="Estimated Cost Rs." required>
+                <button type="submit">Add to Home Plan</button>
+            </form>
+        </div>
+
+        <!-- Items List -->
+        <div class="grid-list">
+            {% for i in items %}
+            <div class="item-card">
+                <div class="item-left">
+                    <div class="icon-circle home-icon">🏠</div>
+                    <div>
+                        <h4>{{ i.title }}</h4>
+                        <p>Rs. {{ i.amount }}</p>
+                    </div>
+                </div>
+                <a href="/delete/home/{{ loop.index0 }}" class="del">×</a>
+            </div>
+            {% endfor %}
+
+            {% if items|length == 0 %}
+            <div class="empty-card">
+                <h2>🏡</h2>
+                <p>No home items yet. Start planning your home!</p>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Total -->
+        {% if items|length > 0 %}
+        <div class="total-footer">
+            <span>Total Home Budget</span>
+            <strong>Rs. {{ items|sum(attribute='amount') }}</strong>
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>

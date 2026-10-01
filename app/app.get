@@ -1,0 +1,87 @@
+@app.get("/home-planner", response_class=HTMLResponse)
+async def home_planner(request: Request, current_user: UserInDB = Depends(get_current_active_user)):
+    """Home budget planner page"""
+    return templates.TemplateResponse("home_planner.html", {"request": request, "user": current_user})
+
+
+def get_home_recommendations(budget_input: HomeBudgetInput) -> dict:
+    """Generate home interior recommendations with budget in INR for Indian market"""
+    try:
+        prompt = f"""
+        I need interior design product recommendations for a home in India with a total
+        budget of ₹{budget_input.total_budget:.2f}.
+
+        Requirements:
+        - {budget_input.num_lights} lights/lighting fixtures
+        - {budget_input.num_fans} ceiling fans
+        - {budget_input.num_furniture} furniture pieces
+        - {budget_input.num_tables} dining tables
+
+        Additional rooms to consider:
+        {(" - Living room" if budget_input.has_living_room else "")}
+        {(" - Kitchen" if budget_input.has_kitchen else "")}
+        {(" - Bedroom" if budget_input.has_bedroom else "")}
+
+        Additional requirements: {budget_input.additional_requirements or "None"}
+
+        Please provide a detailed product breakdown with product recommendations
+        available in India. Use Indian brands and prices. Include "search terms"
+        suitable for Indian shopping platforms.
+
+        Format your response as JSON with the following structure:
+
+        {{
+            "total_budget": {budget_input.total_budget:.2f},
+            "budget_breakdown": {{
+                "category": "lighting",
+                "allocation": 0.0,
+                "items": [
+                    {{
+                        "name": "",
+                        "description": "",
+                        "estimated_price": 0.0,
+                        "quantity": 0,
+                        "search_terms": ""
+                    }}
+                ]
+            }},
+            "calculation_table": [
+                {{
+                    "category": "",
+                    "items_count": 0,
+                    "total_cost": 0,
+                    "percentage_of_budget": 0.0
+                }}
+            ],
+            "remaining_budget": 0.0,
+            "additional_suggestions": []
+        }}
+
+        Ensure total costs stay within the budget. Include search terms for each item
+        to find on shopping websites like Flipkart, Amazon India, IKEA, etc.
+        """
+
+        response = model.generate_content(prompt)
+        result = extract_json_from_response(response.text)
+
+        # Add shopping links for each item
+        for category in result.get("budget_breakdown", []):
+            for item in category.get("items", []):
+                search_terms = item.get("search_terms", "")
+                if search_terms:
+                    from urllib.parse import quote_plus
+                    item["shopping_links"] = {
+                        "amazon": f"https://www.amazon.in/s?k={quote_plus(search_terms)}",
+                        "flipkart": f"https://www.flipkart.com/search?q={quote_plus(search_terms)}",
+                        "ikea": f"https://www.ikea.com/in/en/search/?q={quote_plus(search_terms)}",
+                        "nykaa": f"https://www.nykaa.com/search/result/?q={quote_plus(search_terms)}",
+                        "pepperfry": f"https://www.pepperfry.com/site_product/search?q={quote_plus(search_terms)}"
+                    }
+
+        return result
+    except Exception as e:
+        raise e
+
+
+def get_home_recommendations(budget_input: HomeBudgetInput) -> dict:
+    ...

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>History - PocketSmart AI</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body>
+    <div class="navbar">
+        <h2>📜 History</h2>
+        <a href="/dashboard">← Dashboard</a>
+    </div>
+
+    <div class="container">
+        <div class="header-flex">
+            <h1>All Expenses</h1>
+            <span class="count-badge">{{ expenses|length }} Records</span>
+        </div>
+
+        {% if expenses|length > 0 %}
+        <div class="table-card">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Title</th>
+                        <th>Amount</th>
+                        <th>Category</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for e in expenses %}
+                    <tr>
+                        <td>{{ loop.index }}</td>
+                        <td>{{ e.title }}</td>
+                        <td><strong>Rs. {{ e.amount }}</strong></td>
+                        <td><span class="badge">{{ e.category }}</span></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="summary-row">
+            <div class="summary-box">
+                <p>Total Spent</p>
+                <h2>Rs. {{ expenses|sum(attribute='amount') }}</h2>
+            </div>
+            <div class="summary-box">
+                <p>Total Transactions</p>
+                <h2>{{ expenses|length }}</h2>
+            </div>
+        </div>
+
+        {% else %}
+        <div class="empty-card">
+            <h2>📭</h2>
+            <p>No history yet</p>
+            <a href="/dashboard" class="btn-primary">Add First Expense</a>
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>

@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+
+{% block title %}Login - PocketSmart AI{% endblock %}
+
+{% block content %}
+<div class="center-body">
+    <div class="auth-card">
+        <div class="logo-circle small">💰</div>
+        <h2>Welcome Back</h2>
+        <p class="auth-sub">Login to your PocketSmart account</p>
+
+        <form id="loginForm" class="auth-form">
+            <div class="input-group">
+                <label>Email / Username</label>
+                <input type="text" name="email" placeholder="Enter email or username" required>
+            </div>
+            
+            <div class="input-group">
+                <label>Password</label>
+                <input type="password" name="password" placeholder="Enter password" required>
+            </div>
+
+            <p id="formMsg" class="form-msg"></p>
+
+            <button type="submit" class="btn-full">Login</button>
+        </form>
+
+        <div class="auth-footer">
+            <p>Don't have an account? <a href="/register">Register now</a></p>
+            <a href="/" class="back-link">← Back to Home</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+const form = document.getElementById('loginForm');
+const msg = document.getElementById('formMsg');
+
+form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    msg.textContent = 'Logging in...';
+    msg.className = 'form-msg loading';
+    
+    const data = {
+        email: form.email.value.trim(),
+        password: form.password.value
+    };
+
+    try {
+        const res = await fetch('/api/login', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(data)
+        });
+
+        const result = await res.json();
+
+        if (res.ok) {
+            msg.textContent = 'Success! Redirecting...';
+            msg.className = 'form-msg success';
+            setTimeout(() => {
+                window.location.href = '/dashboard';
+            }, 800);
+        } else {
+            msg.textContent = result.error || 'Login failed. Check credentials.';
+            msg.className = 'form-msg error';
+        }
+    } catch (err) {
+        msg.textContent = 'Server error. Try again.';
+        msg.className = 'form-msg error';
+    }
+});
+</script>
+{% endblock %}
